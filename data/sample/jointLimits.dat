@@ -1,0 +1,5 @@
+# this is a sample of format for this file, for a SampleRobot: JOINT and TORQUE , SPEED LIMITS 
+JointId.  	**  NAME of JOINT   **  JOINT ANGLE[deg]  **  MAX TORQUE [Nm]  **  MAX SPEED [rpm]
+0 		FirstJoint 		35 	-35 		100 			11
+1 		SecondJoint 		15 	-45 		200 			11.5
+

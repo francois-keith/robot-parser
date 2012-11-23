@@ -1,0 +1,12 @@
+# Correspondance between real body names and name used in the urdf file (for normalization)
+TrunkUp		-> torso
+TrunkLow	-> body
+
+LAnkleJoint	 	-> l_ankle
+LToeJoint		-> l_toe
+LWrist			-> l_wrist
+
+RAnkleJoint	 	-> r_ankle
+RToeJoint		-> r_toe
+RWrist			-> r_wrist
+

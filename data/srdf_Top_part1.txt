@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+
+   This file defines semantics group of joints.
+
+   It is an alternative way of specifying semantics on the robot
+   structure.
+
+   It also provides:
+   - the half-sitting robot state,
+   TODO: - add the grippers
+   TODO: - the set of interesting collision pairs
+
+  -->

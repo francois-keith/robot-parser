@@ -1,0 +1,12 @@
+# file containing the real bodies
+Trunk		-> torso
+TrunkYaw	-> body
+
+LAnkleRoll	 	-> l_ankle
+LToePitch		-> l_toe
+LWristPitch		-> l_wrist
+
+RAnkleRoll	 	-> r_ankle
+RToePitch		-> r_toe
+RWristPitch		-> r_wrist
+

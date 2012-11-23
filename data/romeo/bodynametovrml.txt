@@ -1,0 +1,72 @@
+# file containing the real bodies
+Trunk		-> Torso
+NeckPitch	-> NeckPitch       
+HeadRoll	-> HeadRoll
+
+LShoulderYaw 	-> LShoulderYaw
+LElbowYaw		-> LElbowYaw
+LWristYaw		-> WristYaw
+LWristRoll		-> LWristRoll
+LWristPitch		-> LWristPitch
+LWristPitch1     -> LHand
+
+
+RShoulderYaw	-> RShoulderYaw
+RElbowYaw		-> RElbowYaw
+RWristYaw		-> WristYaw
+RWristRoll		-> RWristRoll
+RWristPitch		-> RWristPitch
+RWristPitch1            -> RHand
+
+
+LHipPitch 		-> LHipPitch
+LKneePitch 		-> LKneePitch
+LAnkleRollBasic	-> LAnkleRollBasic
+LAnkleRoll		-> LAnkleRoll
+LToePitch		-> LToePitch
+
+RHipPitch			-> RHipPitch       
+RKneePitch			-> RKneePitch
+RAnkleRollBasic		-> RAnkleRollBasic
+RAnkleRoll			-> RAnkleRoll
+RToePitch			-> RToePitch
+
+Phalax			-> Phalax
+PhalaxEnd       -> PhalaxEnd
+RThumb			-> RThumb          
+LThumb			-> LThumb            
+
+RThumb1			-> RThumb          
+LThumb1			-> LThumb            
+
+LFinger11	-> Phalax
+LFinger12	-> Phalax
+LFinger13	-> PhalaxEnd
+
+LFinger21	-> Phalax
+LFinger22	-> Phalax
+LFinger23	-> PhalaxEnd
+
+LFinger31	-> Phalax
+LFinger32	-> Phalax
+LFinger33	-> PhalaxEnd
+
+LThumb2		-> Phalax
+LThumb3		-> PhalaxEnd
+
+
+RFinger11	-> Phalax
+RFinger12	-> Phalax
+RFinger13	-> PhalaxEnd
+
+RFinger21	-> Phalax
+RFinger22	-> Phalax
+RFinger23	-> PhalaxEnd
+
+RFinger31	-> Phalax
+RFinger32	-> Phalax
+RFinger33	-> PhalaxEnd
+
+RThumb2		-> Phalax
+RThumb3		-> PhalaxEnd
+

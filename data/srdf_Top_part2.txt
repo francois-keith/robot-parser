@@ -1,0 +1,40 @@
+  <!-- groups -->
+
+  <!-- To remove when the grippers will be added
+  <group name="r_arm">
+    <chain base_link="torso" tip_link="r_gripper"/>
+  </group>
+
+  <group name="l_arm">
+    <chain base_link="torso" tip_link="l_gripper"/>
+  </group>
+  -->
+
+  <group name="r_leg">
+    <chain base_link="base_link" tip_link="r_foot"/>
+  </group>
+
+  <group name="l_leg">
+    <chain base_link="base_link" tip_link="l_foot"/>
+  </group>
+
+  <!-- To remove when the grippers will be added
+  <group name="arms">
+    <group name="l_arm"/>
+    <group name="r_arm"/>
+  </group>
+
+  <group name="all">
+    <group name="arms"/>
+  </group>
+  -->
+
+  <!-- end effector -->
+  <!-- To remove when the grippers will be added
+  <end_effector name="r_arm" parent_link="r_gripper" group="r_arm"/>
+  <end_effector name="l_arm" parent_link="l_gripper" group="l_arm"/>
+  -->
+  <end_effector name="r_leg" parent_link="r_foot" group="r_leg"/>
+  <end_effector name="l_leg" parent_link="l_foot" group="l_leg"/>
+
+  <!-- pre-defined states -->
