@@ -119,17 +119,26 @@ void writeOpenHRP (
 	std::string inFile("../data/"+robotNameForHeader+"-HalfSitting.dat");
 	DECLARE_IFSTREAM(in, inFile.c_str());
 	std::vector<double> initialPosition(mb->nbJoints()+6);
-	for(int i=0; i<mb->nbJoints()+6; ++i)
-		in >> initialPosition[i];
-	in.close();
+	if(in)
+	{
+		for(int i=0; i<mb->nbJoints()+6; ++i)
+			in >> initialPosition[i];
+		in.close();
+	}
+	else
+	{
+		std::cerr << "  *** Warning: the half sitting position is not defined *** " << std::endl;
+		for(int i=0; i<mb->nbJoints()+6; ++i)
+			initialPosition[i] = 0;
+	}
 	//end of loading
 
-	writeRomeoHeader(
-		openhrpFolder,
-		robotNameForHeader,
-		robotName,	mb,
-		limbMap, initialPosition
-	);
+//	writeRomeoHeader(
+//		openhrpFolder,
+//		robotNameForHeader,
+//		robotName,	mb,
+//		limbMap, initialPosition
+//	);
 
 
 	writeInitConfig(
