@@ -42,7 +42,7 @@ void writeXmlFile(const MultiBody* mb, const std::string & xmlfile, const std::s
 
 	outXML << "\t<Bodies>" << endl;		
 	for (std::map<int,Body*>::const_iterator it = mb->bodyMap_.begin(); it != mb->bodyMap_.end(); ++it)
-		writeAmelif(it->second, outXML, bodyNameMap, "afresources/hrp4/");
+		writeAmelif(it->second, outXML, bodyNameMap, "afresources/"+robotName+"/");
 	outXML << "\t</Bodies>" << endl;
 
 	outXML << "\t<Joints>" << endl;
