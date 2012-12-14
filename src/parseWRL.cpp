@@ -61,7 +61,12 @@ Body* MultiBody::parseBodyWRL (ifstream & ifs, const std::string & line)
 		else if (tmp == "mass" )
 			istt >> body->mass_;
 		else if (tmp == "momentsOfInertia" )
-			istt >> draft >> body->inertia_;
+		{
+			char draft_char =' ';
+			while (draft_char != '[')
+				istt >> draft_char;
+			istt >> body->inertia_;
+		}
 		else if (tmp == "children" )
 		{
 			int levelCrochet = 0;
@@ -170,19 +175,20 @@ Joint* MultiBody::parseJointWRL (ifstream & ifs, const std::string & line, Body*
 			std::cout << " skipping line "  << line2 << std::endl;
 		else if (tmp == "llimit" )
 		{
-			// skip the value in radian.
-			istt >> draft >> draft;
-			std::string value = draft.substr(1, draft.size() - 1);
-			std::istringstream istt2(value);
-			istt2 >> joint->positionMin_;
+			// TODO: protect this: check for a # in the line before parsing
+			// skip the value in radian, go to the commentary
+			char draft_char =' ';
+			while (draft_char != '#')
+				istt >> draft_char;
+			istt >> joint->positionMin_;
 		}
 		else if (tmp == "ulimit" )
 		{
-			// skip the value in radian.
-			istt >> draft >> draft;
-			std::string value = draft.substr(1, draft.size() - 1);
-			std::istringstream istt2(value);
-			istt2 >> joint->positionMax_;
+			// skip the value in radian, go to the commentary
+			char draft_char =' ';
+			while (draft_char != '#')
+				istt >> draft_char;
+			istt >> joint->positionMax_;
 		}
 		else if (tmp == "rotorInertia" )
 			istt >> joint->rotorInertia_;
