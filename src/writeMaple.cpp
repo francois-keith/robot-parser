@@ -88,7 +88,9 @@ void writeMaple(
 	outKinematicMaple << "NSOL := " << (mb->nbBodies()+1) << ":" << endl;
 	outKinematicMaple << "#number of DOFs" << endl;
 	outKinematicMaple << "NDDL := " << (mb->nbJoints()+6) << ":" << endl;
-	outKinematicMaple << "#vectors corresponding to DOFs" << endl;
+
+	outKinematicMaple << endl;
+	outKinematicMaple << "# Definitions of coordinates and generalized speeds" << endl;
 	outKinematicMaple << "q := vector(NDDL):" << endl;
 	outKinematicMaple << "qdot := vector(NDDL):" << endl;
 	outKinematicMaple << endl;
@@ -102,13 +104,13 @@ void writeMaple(
 	outKinematicMaple << "Tz_1 := 0:" << endl;
 	outKinematicMaple << endl;
 	outKinematicMaple << "#Trunk - Primary body" << endl;
-	outKinematicMaple << "ref_2 := 1:" << endl;
-	outKinematicMaple << "Rx_2 := q["  << mb->nbJoints()+3+1 << "]:" << endl;
-	outKinematicMaple << "Ry_2 := -q[" << mb->nbJoints()+5+1 << "]:" << endl;
-	outKinematicMaple << "Rz_2 := q["  << mb->nbJoints()+4+1 << "]:" << endl;
-	outKinematicMaple << "Tx_2 := q["  << mb->nbJoints()+0+1 << "]:" << endl;
-	outKinematicMaple << "Ty_2 := -q[" << mb->nbJoints()+2+1 << "]:" << endl;
-	outKinematicMaple << "Tz_2 := q["  << mb->nbJoints()+1+1 << "]:" << endl;
+	outKinematicMaple << "ref_2\t:= 1:" << endl;
+	outKinematicMaple << "Rx_2\t:= q["  << mb->nbJoints()+3+1 << "]:" << endl;
+	outKinematicMaple << "Ry_2\t:= -q[" << mb->nbJoints()+5+1 << "]:" << endl;
+	outKinematicMaple << "Rz_2\t:= q["  << mb->nbJoints()+4+1 << "]:" << endl;
+	outKinematicMaple << "Tx_2\t:= q["  << mb->nbJoints()+0+1 << "]:" << endl;
+	outKinematicMaple << "Ty_2\t:= -q[" << mb->nbJoints()+2+1 << "]:" << endl;
+	outKinematicMaple << "Tz_2\t:= q["  << mb->nbJoints()+1+1 << "]:" << endl;
 	outKinematicMaple << data_kinematic.str();
 
 	outKinematicMaple.close();
@@ -316,7 +318,7 @@ void writeLagrangianFile(const std::string & lagModelFile,
 
 void writeMaple (const Body* b, ofstream & outDynamicMaple)
 {
-	outDynamicMaple << endl << "#Frame " << b->name_ << endl;
+	outDynamicMaple << endl << "# Frame " << b->name_ << endl;
 	outDynamicMaple << "m_" << (b->id_+2) << " := " << b->mass_ << ":" << endl;
 	outDynamicMaple << "G_" << (b->id_+2)<< " := " << "vector([" << b->com_(0) << " , " << b->com_(1) << " , " << b->com_(2) << "]):" << endl;
 	outDynamicMaple << "IG_" << (b->id_+2) << " := " << "matrix([";
@@ -357,29 +359,31 @@ void writeMaple (const Joint* j, stringstream & data_kinematic)
 		axe = 'y';
 	}
 
-	data_kinematic << endl << "#frame " << j->name_ << endl;
-	data_kinematic << "ref_" << (j->outerBodyId_ +2) << " := " << (j->innerBodyId_+2) << ":" << endl;
+	assert(j->staticRPY_[0] == 0 && j->staticRPY_[1] == 0 && j->staticRPY_[2] == 0
+		   && "The humans generator does not allow static rotations");
+	data_kinematic << endl << "# Frame " << (j->outerBodyId_ +2) << " : " << j->name_ << endl;
+	data_kinematic << "ref_" << (j->outerBodyId_ +2) << "\t:= " << (j->innerBodyId_+2) << ":" << endl;
 	switch(axe)
 	{
 	case 'x':
-		data_kinematic << "Rx_" << (j->outerBodyId_ +2) << " := q[" << (j->id_+1) << "]:" << endl;
-		data_kinematic << "Ry_" << (j->outerBodyId_ +2) << " := 0:" << endl;
-		data_kinematic << "Rz_" << (j->outerBodyId_ +2) << " := 0:" << endl;
+		data_kinematic << "Rx_" << (j->outerBodyId_ +2) << "\t:= q[" << (j->id_+1) << "]:" << endl;
+		data_kinematic << "Ry_" << (j->outerBodyId_ +2) << "\t:= 0:" << endl;
+		data_kinematic << "Rz_" << (j->outerBodyId_ +2) << "\t:= 0:" << endl;
 		break;
 	case 'y':
-		data_kinematic << "Ry_" << (j->outerBodyId_ +2) << " := q[" << (j->id_+1) << "]:" << endl;
-		data_kinematic << "Rx_" << (j->outerBodyId_ +2) << " := 0:" << endl;
-		data_kinematic << "Rz_" << (j->outerBodyId_ +2) << " := 0:" << endl;
+		data_kinematic << "Rx_" << (j->outerBodyId_ +2) << "\t:= 0:" << endl;
+		data_kinematic << "Ry_" << (j->outerBodyId_ +2) << "\t:= q[" << (j->id_+1) << "]:" << endl;
+		data_kinematic << "Rz_" << (j->outerBodyId_ +2) << "\t:= 0:" << endl;
 		break;
 	case 'z':
-		data_kinematic << "Rz_" << (j->outerBodyId_ +2) << " := q[" << (j->id_+1) << "]:" << endl;
-		data_kinematic << "Ry_" << (j->outerBodyId_ +2) << " := 0:" << endl;
-		data_kinematic << "Rx_" << (j->outerBodyId_ +2) << " := 0:" << endl;
+		data_kinematic << "Rx_" << (j->outerBodyId_ +2) << "\t:= 0:" << endl;
+		data_kinematic << "Ry_" << (j->outerBodyId_ +2) << "\t:= 0:" << endl;
+		data_kinematic << "Rz_" << (j->outerBodyId_ +2) << "\t:= q[" << (j->id_+1) << "]:" << endl;
 		break;
 	}
-	data_kinematic << "Tx_" << (j->outerBodyId_ +2) << " := " << j->staticXYZ_[0] << ":" << endl;
-	data_kinematic << "Ty_" << (j->outerBodyId_ +2) << " := " << j->staticXYZ_[1] << ":" << endl;
-	data_kinematic << "Tz_" << (j->outerBodyId_ +2) << " := " << j->staticXYZ_[2] << ":" << endl;
+	data_kinematic << "Tx_" << (j->outerBodyId_ +2) << "\t:= " << j->staticXYZ_[0] << ":" << endl;
+	data_kinematic << "Ty_" << (j->outerBodyId_ +2) << "\t:= " << j->staticXYZ_[1] << ":" << endl;
+	data_kinematic << "Tz_" << (j->outerBodyId_ +2) << "\t:= " << j->staticXYZ_[2] << ":" << endl;
 }
 
 
@@ -425,7 +429,7 @@ void createPrefixForAdditionnalData (ofstream & outAddMaple,
 	outAddMaple << "NCONT := "<< (numContactSolids*4) <<":"<<std::endl << std::endl;
 
 	outAddMaple << "#Definition vecteur Lambda:" << std::endl;
-	outAddMaple << " Lambda := vector(3*NCONT):" << std::endl << std::endl;
+	outAddMaple << "Lambda := vector(3*NCONT):" << std::endl << std::endl;
 
 	outAddMaple << "# Number of tags" << std::endl;
 	outAddMaple << "NTAG := 40:" << std::endl;
