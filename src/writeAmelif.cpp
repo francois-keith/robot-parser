@@ -66,10 +66,11 @@ void writeAmelif (const Body * body, ofstream & xml, const std::map<string,std::
 
 	for (int i=0; i<3; ++i)
 	{
-		xml << " ";
 		for (int j=0; j<3; ++j)
 		{
-			xml << body->inertia_ (i,j) << " ";
+			xml << body->inertia_ (i,j);
+			if (i !=2 || j != 2)
+				xml << " ";
 		}
 	}
 
@@ -82,7 +83,6 @@ void writeAmelif (const Body * body, ofstream & xml, const std::map<string,std::
 			xml << "\t\t\t<File>" << vrmlPath << "vrml/" <<  (vrmls[i]) << ".wrl</File>" << std::endl;
 	}
 	xml << "\t\t</Body>" << endl;
-	xml << endl;
 }
 
 
