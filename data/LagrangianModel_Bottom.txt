@@ -1,0 +1,64 @@
+
+/**
+ * Compute the matrix of contact for a given robot state
+ *
+ * @param[out] CC Matrix of contact <em> dim NCONTx3(xyz) </em>
+ * @param[in] q Joint State Vector <em> dim NDOF </em>
+ */
+EXTERN  void
+Contact(double *CC,double *q);
+
+/**			 	    
+ * Compute the matrix of contact jacobian for a given robot state
+ *
+ * @param[out] CJ Matrix of Contact Jacobian <em> dim (3xNCONT)*NDOF </em>
+ * @param[in] q Joint State Vector <em> dim NDOF </em>
+ */
+EXTERN void
+ContactJacobian(double *CJ,double *q);
+
+/**			 	    
+ * Compute the vector of contact hessians for a given robot state
+ *
+ * @param[out] H Vector of Contact Hessians <em> dim NCONT*3 </em>
+ * @param[in] q Joint State Vector <em> dim NDOF </em>
+ * @param[in] qdot Articular Velocity State Vector <em> dim NDOF </em>
+ */
+EXTERN void
+ContactHessian(double *H,double *q, double *qdot);
+
+/**
+ * Compute the matrix of Non Linear Effect (Coriolis + Gravity) 
+ * for a given robot state
+ *
+ * @param[out] N Matrix of Coriolis <em> dim NDOF </em>
+ * @param[in] q joint State Vector <em> dim NDOF </em>
+ * @param[in] qdot Articular Velocity State Vector <em> dim NDOF </em>
+ */
+EXTERN void
+NLEffects(double *N, double *q, double *qdot);
+
+/**			 	    
+ * Compute the matrix of inertia for a given robot state
+ *
+ * @param[out] M Matrix of Inertia <em> dim NDOFxNDOF </em>
+ * @param[in] q Joint State Vector <em> dim NDOF </em>
+ */
+EXTERN void 
+Inertia(double *M,double *q);
+
+/**			 	    
+ * Compute the matrix of tags for a given robot state
+ * This matrix is made up of caracteristic points of robot
+ * in the absolute referential. The end of matrix T contains
+ * the coordinate of the biped mass center  
+ *
+ * @param[out] T Matrix of contact <em> dim 60 = NTAGSx3(xyz) </em>
+ * @param[in] q Joint State Vector <em> dim NDOF </em>
+ */
+EXTERN void 
+Tags(double *T, double *q);
+
+
+
+#endif /* __LagrangianModel_h */

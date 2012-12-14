@@ -49,6 +49,8 @@ namespace Robot
 		bool parseMotor(std::ifstream & ifs);
 
 		void parseWRL  (std::ifstream & ifs, std::ifstream & ifs_jointLimits);
+		void parseTags(std::ifstream &ifs);
+
 		Body*  parseBodyWRL  (std::ifstream & ifs_joints, const std::string & line);
 		Joint* parseJointWRL (std::ifstream & ifs_joints, const std::string & line, Body* innerBody);
 		void parseWRLJointLimit (std::ifstream & ifs_jointLimits);
@@ -56,7 +58,7 @@ namespace Robot
 		int nbBodies(void) const;
 		int nbJoints(void) const;
 
-
+		std::string getBodyFromTag(const std::string & tag) const;
 		void getBodyNameToURDF(const std::string & robotName);
 		void getBodyNameToVRML(const std::string & robotName);
 
@@ -67,6 +69,7 @@ namespace Robot
 		double getTorqueOfMotor(const std::string & motorName);
 
 	public:
+		std::map<std::string, std::string> tagMap_;
 		std::map<int,Body*> bodyMap_;
 		std::map<int,Joint*> jointMap_;
 		std::vector<Motor*> motorVec_;

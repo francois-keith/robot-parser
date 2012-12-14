@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 
+#include <cstdlib>
+
 using namespace Robot;
 using namespace std;
 
@@ -41,15 +43,18 @@ void writeLagrangianFile(const std::string & lagModelFile,
 //writeMaple
 void writeMaple(
 	const Robot::MultiBody* mb,
-	const std::string & kinematicfile,
-	const std::string & dynamicfile,
-	const std::string & limitsfile,
-	const std::string & addDataFile,
-	const std::string & lagModelFile,
+	const std::string & mapleFolder,
 	const std::string & robotName,
 	bool useToes
 	)
 {
+	string kinematicfile(	mapleFolder + "KinematicData.maple");
+	string dynamicfile(	mapleFolder + "DynamicData.maple");
+	string addDataFile(	mapleFolder + "AdditionnalData.maple");
+	string limitsfile(		mapleFolder + "../SomeDefinitions.c");
+	string lagModelFile(	mapleFolder + "../LagrangianModel.h");
+	system( ("mkdir -p " + mapleFolder).c_str() );
+
 	// number of bodies in contact. The number of contact points is this number * 4
 	int numContactBodies = 	(useToes)? 4 : 2;
 
@@ -207,6 +212,83 @@ void createAdditionnalData (
 	// create the upper part of the file
 	createPrefixForAdditionnalData (outAddMaple, numContactBodies, robotName, version);
 
+	// create the tags
+	createFootTagForAdditionnalData(outAddMaple, 1, mb->getBodyFromTag("LeftAnkle"),
+		mb->ankle_rearBound_, mb->ankle_frontBound_+mb->toe_frontBound_, mb->ankle_leftBound_, mb->ankle_rightBound_, mb->ankle_Height_);
+	createFootTagForAdditionnalData(outAddMaple, 5, mb->getBodyFromTag("RightAnkle"),
+		mb->ankle_rearBound_, mb->ankle_frontBound_+mb->toe_frontBound_, mb->ankle_rightBound_, mb->ankle_leftBound_, mb->ankle_Height_);
+
+	// even though they are not used, we add the tags of the toes, just to be keep the same number of tags
+	outAddMaple << "# The following tags (9..16) should not be used, but are kept so that the number of tags does not change" << std::endl;
+	createFootTagForAdditionnalData(outAddMaple, 9, "", 0, 0, 0, 0, 0);
+	createFootTagForAdditionnalData(outAddMaple, 13, "", 0, 0, 0, 0, 0);
+
+	// add the tags for the end effectors
+	int tagIndex = 17;
+	outAddMaple << "### End effectors" << std::endl << std::endl;
+
+	std::vector<std::string> bodyList;
+	bodyList.push_back(mb->getBodyFromTag("LeftWrist"));
+	bodyList.push_back(mb->getBodyFromTag("RightWrist"));
+	bodyList.push_back(mb->getBodyFromTag("LeftAnkle"));
+	bodyList.push_back(mb->getBodyFromTag("RightAnkle"));
+
+	createDisplayTagForAdditionnalData(outAddMaple, bodyList, tagIndex);
+	tagIndex += bodyList.size();
+	bodyList.clear();
+
+	// add the tags for the display
+	outAddMaple << "### Other bodies (for the display)" << std::endl << std::endl;
+	bodyList.push_back(mb->getBodyFromTag("LeftKnee"));
+	bodyList.push_back(mb->getBodyFromTag("RightKnee"));
+	bodyList.push_back(mb->getBodyFromTag("LeftHip"));
+	bodyList.push_back(mb->getBodyFromTag("RightHip"));
+	bodyList.push_back(mb->getBodyFromTag("Torso"));
+	bodyList.push_back(mb->getBodyFromTag("Neck"));
+	bodyList.push_back(mb->getBodyFromTag("LeftWrist"));
+	bodyList.push_back(mb->getBodyFromTag("RightWrist"));
+	bodyList.push_back(mb->getBodyFromTag("LeftElbow"));
+	bodyList.push_back(mb->getBodyFromTag("RightElbow"));
+	bodyList.push_back(mb->getBodyFromTag("RightShoulder"));
+	bodyList.push_back(mb->getBodyFromTag("RightShoulder"));
+	createDisplayTagForAdditionnalData(outAddMaple, bodyList, tagIndex);
+	tagIndex += bodyList.size();
+	bodyList.clear();
+
+	// Add 6 additional tags for the display of the head
+	copyFile("../data/AdditionnalData_Bottom.maple", outAddMaple);
+	tagIndex += 6;
+
+	// again, a dirty patch to keep the same number of tags
+	bodyList.push_back("");
+	bodyList.push_back("");
+
+	createDisplayTagForAdditionnalData(outAddMaple, bodyList, tagIndex);
+	tagIndex += bodyList.size();
+	bodyList.clear();
+
+	outAddMaple.close();
+	// end of joints limitations.
+}
+
+/*
+// also, write the additional data
+void createAdditionnalDataRomeo (
+		const MultiBody * mb,
+		const std::string & addDataFile,
+		const std::string & robotName,
+		const std::string & version,
+		int numContactBodies,
+		bool useToes
+	)
+{
+	DECLARE_OFSTREAM(outAddMaple, addDataFile.c_str());
+
+	copyFile("../data/AdditionnalData_Top.maple", outAddMaple);
+
+	// create the upper part of the file
+	createPrefixForAdditionnalData (outAddMaple, numContactBodies, robotName, version);
+
 	if(useToes)
 	{
 		// create the tags
@@ -297,7 +379,7 @@ void createAdditionnalData (
 	outAddMaple.close();
 	// end of joints limitations.
 }
-
+*/
 
 	// finally, write the LagrangianModel data
 void writeLagrangianFile(const std::string & lagModelFile,

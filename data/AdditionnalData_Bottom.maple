@@ -1,0 +1,28 @@
+
+# Tag 33 : Head
+reftag_33 := 7:
+tag_33    := vector([0, 0, 0]): 
+
+HeadRadius							:= 0.121:
+
+# Tag 34 : Head
+reftag_34 := 5:
+tag_34    := vector([0, 0, HeadRadius]): 
+
+# Tag 35 : Head
+reftag_35 := 5:
+tag_35    := vector([HeadRadius, 0, 0]): 
+
+# Tag 36 : Head
+reftag_36 := 5:
+tag_36    := vector([0, HeadRadius/2, 0]): 
+
+# Tag 37 : Head
+reftag_37 := 5:
+tag_37    := vector([-HeadRadius/2, 0, 0]): 
+
+# Tag 38 : Head
+reftag_38 := 5:
+tag_38    := vector([0, -HeadRadius/2, 0]): 
+
+

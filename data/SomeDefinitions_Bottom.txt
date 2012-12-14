@@ -1,0 +1,137 @@
+void setMaxq( double * maxq)
+{
+ int i;
+
+ for( i=0; i<NDOF; i++)
+    MAXQ[i] = maxq[i];
+}
+
+void getMaxq(double *maxq)
+{
+ int i;
+
+ for(i=0; i<NDOF; i++)
+    maxq[i] = MAXQ[i];
+}
+
+void setMinq( double * minq)
+{
+ int i;
+
+ for( i=0; i<NDOF; i++)
+    MINQ[i] = minq[i];
+}
+
+void getMinq(double *minq)
+{
+ int i;
+
+ for(i=0; i<NDOF; i++)
+    minq[i] = MINQ[i];
+}
+
+//Definitions for Lagrangian Model
+
+/**
+ * Global variable storing the name of the lagrangian model
+ *
+ * \var LAGRANGIANMODELNAME (string)
+ */
+ char *LAGRANGIANMODELNAME = "Romeo";
+
+void setLagrangianModelName(char* lagrangianModelName)
+{
+ LAGRANGIANMODELNAME = strdup(lagrangianModelName);
+}
+
+void getLagrangianModelName(char *lagrangianModelName)
+{
+ strcpy(lagrangianModelName, LAGRANGIANMODELNAME);
+}
+
+/**
+ * Global varaible stroing the name of the contact points
+ *
+ * \var CONTACTNAMES (string) <em> dim NCONT </em>
+ */
+ char *CONTACTNAMES[8] = {"right exterior toe",
+			  "right interior toe",
+			  "right exterior heel",
+			  "right interior heel",
+			  "left exterior toe",
+			  "left interior toe",
+			  "left exterior heel",
+			  "left interior heel"};
+
+void setContactNames(char* contactNames, int *index)
+{
+ CONTACTNAMES[*index] = strdup(contactNames);
+}
+
+
+void getContactNames(char *contactNames, int *index)
+{ 
+ strcpy(contactNames, CONTACTNAMES[*index]);
+}
+
+/**
+ * Global variable storing the solids of contact
+ *
+ * \var CONTACTSOLIDS (int) <em> dim 2*nbContactSolid </em>
+ */
+ int CONTACTSOLIDS[4] = {1, 5, 4, 8};
+
+void setContactSolids(int* contactSolids)
+{
+ int i;
+
+ for(i=0; i<4; i++)
+    CONTACTSOLIDS[i] = contactSolids[i];
+}
+
+void getContactSolids(int *contactSolids)
+{
+ int i;
+
+ for(i=0; i<4; i++)
+    contactSolids[i] = CONTACTSOLIDS[i];
+}
+
+void getNbContactSolids(int *nbSolids)
+{
+  *nbSolids = 2;
+}
+
+
+void SetModelSize(double *subjectSize){};
+
+void GetModelSize(double *subjectSize){};
+
+void SetModelMass(double *subjectMass){};
+
+void GetModelMass(double *subjectMass){};
+
+void SetAnatomicalLengths(double *anatLengths){};
+
+void GetAnatomicalLengths(double *anatLengths){};
+
+void SetTag2JointLengths(double *tagLengths){};
+
+void GetTag2JointLengths(double *tagLengths){};
+
+void Friction(double *F, double *q, double *qdot){};
+
+void SpringForce(double *S, double *q){};
+
+void TagsH36(double *T, double *q, double *L, double *addl, double mass){}
+
+void InertiaH36(double *M,double *q, double *L, double *addl, double mass){}
+
+void NLEffectsH36(double *N, double *q, double *qdot, double *L, double *addl, double mass){}
+
+void ContactHessianH36(double *H,double *q, double *qdot, double *L, double *addl){}
+
+void ContactJacobianH36(double *CJ,double *q, double *L, double *addl){}
+
+void ContactH36(double *CC,double *q, double *L, double *addl){}
+

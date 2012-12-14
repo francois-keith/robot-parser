@@ -9,11 +9,7 @@
 //writeMaple
 void writeMaple(
 	const Robot::MultiBody* mb,
-	const std::string & kinematicfile,
-	const std::string & dynamicfile,
-	const std::string & limitsfile,
-	const std::string & addDataFile,
-	const std::string & lagModelFile,
+	const std::string & mapleFolder,
 	const std::string & robotName,
 	bool useToes
 	);

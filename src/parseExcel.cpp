@@ -139,6 +139,18 @@ void MultiBody::getBodyNameToVRML(const std::string & robotName)
 	in2.close();
 }
 
+std::string MultiBody::getBodyFromTag(const std::string & tag) const
+{
+	std::map<std::string,std::string>::const_iterator it = tagMap_.find(tag);
+	if(it != tagMap_.end())
+		return it->second;
+	else
+	{
+		std::cerr << "No body corresponds to the tag "<< tag << std::endl;
+		return "";
+	}
+}
+
 void MultiBody::getBodyNameToURDF(const std::string & robotName)
 {
 	DECLARE_IFSTREAM(in, ("../data/"+robotName+"/bodynametourdf.txt").c_str());
@@ -152,6 +164,20 @@ void MultiBody::getBodyNameToURDF(const std::string & robotName)
 		Body::bodyNameToURDF_[bodyName]=(urdf);
 	}
 	in.close();
+}
+
+void MultiBody::parseTags(std::ifstream & ifs)
+{
+	string line;
+	int pos;
+	while(getline(ifs, line))
+	{
+		istringstream smallData(line, ios_base::in);
+		std::string tag, bodyName, tmp;
+		smallData >> tag >> tmp >> bodyName;
+		tagMap_[tag] = bodyName;
+	}
+	ifs.close();
 }
 
 //parsers

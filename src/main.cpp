@@ -30,6 +30,7 @@ int createRobot(const std::string & fileName, const std::string & robotName, boo
 
 	DECLARE_IFSTREAM(file_wrl,         ("../data/"+robotName+"/VRMLmain.wrl").c_str());
 	DECLARE_IFSTREAM(file_jointLimits, ("../data/"+robotName+"/jointLimits.dat").c_str());
+	DECLARE_IFSTREAM(file_TagToBody,    ("../data/"+robotName+"/tag_to_bodyname.txt").c_str());
 
 	// if the wrml file is not found, stop right there.
 	if (!file_wrl)
@@ -74,6 +75,10 @@ int createRobot(const std::string & fileName, const std::string & robotName, boo
 	// write data for amelif.
 	std::string amelifFolder (robotName+"_af/data/");
 	writeAmelif(mb, amelifFolder, fileName, robotName);
+
+	// write data for Humans.
+	std::string mapleFolder = (robotName+"_maple/src/MapleCodeGeneration/");
+	writeMaple(mb, mapleFolder, robotName, useFingers);
 
 	// write data for the sot.
 	string openHRPFolder(robotName+"_sot/data/");

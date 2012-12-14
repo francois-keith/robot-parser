@@ -1,0 +1,16 @@
+# file linking key words to body labels, used for the display in Maple.
+Neck		->	NeckYaw
+Torso		->	TrunkYaw
+Leftshoulder	->	LShoulderYaw
+RightShoulder	->	RShoulderYaw
+LeftElbow	->	LElbowRoll
+RightElbow	->	RElbowRoll
+LeftWrist	->	LWristPitch
+RigthWrist	->	RWristPitch
+LeftKnee	->	LKneePitch
+RightKnee	->	RKneePitch
+LeftHip		->	LHipPitch
+RightHip	->	RHipPitch
+LeftAnkle	->	LAnkleRollBasic
+RightAnkle	->	RAnkleRollBasic
+

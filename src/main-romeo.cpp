@@ -178,14 +178,7 @@ int createRomeo(bool useToes, bool useHands, const std::string & afName, const s
 	// write data for Humans.
 	std::string mapleFolder = ("romeo_maple/"+mapleName+"/src/MapleCodeGeneration/");
 	system( ("mkdir -p " + mapleFolder).c_str() );
-	string outKinematicMaple2(	mapleFolder + "KinematicData.maple");
-	string outDynamicMaple2(	mapleFolder + "DynamicData.maple");
-	string outAdditionalMaple2(	mapleFolder + "AdditionnalData.maple");
-	string outLimitsMaple2(		mapleFolder + "../SomeDefinitions.c");
-	string outLagModelFile2(	mapleFolder + "../LagrangianModel.h");
-	writeMaple(mb, outKinematicMaple2, outDynamicMaple2,
-			outLimitsMaple2, outAdditionalMaple2, outLagModelFile2,
-			mapleName, useToes);
+	writeMaple(mb, mapleFolder, mapleName, useToes);
 
 	// write data for the sot.
 	string openHRPFolder("romeo_sot/data/");
