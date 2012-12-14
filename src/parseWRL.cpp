@@ -13,7 +13,7 @@ using namespace std;
 // main method to parse the wrl file. 
 // in ifs: ifstream corresponding to the multibody
 // in ifs_jointLimits: additional ifstream redefining the joint limits
-void MultiBody::parseWRL(ifstream & ifs, ifstream & ifs_jointLimits)
+void MultiBody::parseWRL(ifstream & ifs)
 {
 	std::string line;
 	while ( (getline(ifs, line) ) &&
@@ -29,10 +29,6 @@ void MultiBody::parseWRL(ifstream & ifs, ifstream & ifs_jointLimits)
 
 	parseBodyWRL (ifs, line);
 	ifs.close();
-
-	// If the extra joint limits file is provided, use it.
-	if(ifs_jointLimits)
-		parseWRLJointLimit (ifs_jointLimits);
 }
 
 //parsers
@@ -267,7 +263,7 @@ Joint* MultiBody::parseJointWRL (ifstream & ifs, const std::string & line, Body*
 }
 
 
-void MultiBody::parseWRLJointLimit (ifstream & ifs_jointLimits)
+void MultiBody::parseJointLimits (ifstream & ifs_jointLimits)
 {
 	std::string line;
 
@@ -284,27 +280,71 @@ void MultiBody::parseWRLJointLimit (ifstream & ifs_jointLimits)
 		double id(0);
 		double posMin(0);
 		double posMax(0);
-		double speedLimit(0);
-		double torqueLimit(0);
 
 		std::string	name;
-		ist >> id >> name >> posMax >> posMin >> torqueLimit >> speedLimit;
-		if(jointMap_[id]->name_ != name)
+		ist >> id >> name >> posMax >> posMin;
+		// check if the body exist
+		if(jointMap_.find(id) != jointMap_.end())
 		{
-			std::cerr << line << std::endl;
-			std::cerr << " label different " << jointMap_[id]->name_ << " != " << name << std::endl;
+			if(jointMap_[id]->name_ != name)
+			{
+				std::cerr << line << std::endl;
+				std::cerr << " label different " << jointMap_[id]->name_ << " != " << name << std::endl;
+			}
+
+			if(jointMap_[id]->positionMin_ != posMin)
+				std::cerr << " positionMin different for " << jointMap_[id]->name_ << "  " << jointMap_[id]->positionMin_ << " != " << posMin << std::endl;
+
+			if(jointMap_[id]->positionMax_ != posMax)
+				std::cerr << " positionMax different " << jointMap_[id]->name_ << "  " << jointMap_[id]->positionMax_ << " != " << posMax << std::endl;
+
+			jointMap_[id]->positionMin_  = posMin;
+			jointMap_[id]->positionMax_  = posMax;
 		}
+		else
+		{
+			std::cerr << "Torque info on joint " << id << "  " << name << " will not be taken into account." << std::endl;
+		}
+		}
+	}
+}
 
-		if(jointMap_[id]->positionMin_ != posMin)
-			std::cerr << " positionMin different for " << jointMap_[id]->name_ << "  " << jointMap_[id]->positionMin_ << " != " << posMin << std::endl;
+void MultiBody::parseTorqueLimits (ifstream & ifs)
+{
+	std::string line;
 
-		if(jointMap_[id]->positionMax_ != posMax)
-			std::cerr << " positionMax different " << jointMap_[id]->name_ << "  " << jointMap_[id]->positionMax_ << " != " << posMax << std::endl;
+	// skip the two useless lines.
+	getline(ifs, line);
+	getline(ifs, line);
 
-		jointMap_[id]->positionMin_  = posMin;
-		jointMap_[id]->positionMax_  = posMax;
-		jointMap_[id]->speedMax_  = speedLimit;
-		jointMap_[id]->torqueMax_ = torqueLimit;
+	// skip the two useless lines.
+	while ( getline(ifs, line) )
+	{
+		if (! ( line.empty() ) )
+		{
+			std::istringstream ist(line);
+			double id(0);
+			double speedLimit(0);
+			double torqueLimit(0);
+
+			std::string	name;
+			ist >> id >> name >> torqueLimit >> speedLimit;
+
+			// check if the body exist
+			if(jointMap_.find(id) != jointMap_.end())
+			{
+				if(jointMap_[id]->name_ != name)
+				{
+					std::cerr << line << std::endl;
+					std::cerr << " label different " << jointMap_[id]->name_ << " != " << name << std::endl;
+				}
+				jointMap_[id]->speedMax_  = speedLimit;
+				jointMap_[id]->torqueMax_ = torqueLimit;
+			}
+			else
+			{
+				std::cerr << "Torque info on joint " << id << "  " << name << " will not be taken into account." << std::endl;
+			}
 		}
 	}
 }

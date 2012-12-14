@@ -48,12 +48,13 @@ namespace Robot
 		bool parseLink(std::ifstream & ifs_links, bool useToes);
 		bool parseMotor(std::ifstream & ifs);
 
-		void parseWRL  (std::ifstream & ifs, std::ifstream & ifs_jointLimits);
+		void parseWRL  (std::ifstream & ifs);
+		void parseJointLimits (std::ifstream & ifs);
+		void parseTorqueLimits (std::ifstream & ifs);
 		void parseTags(std::ifstream &ifs);
 
 		Body*  parseBodyWRL  (std::ifstream & ifs_joints, const std::string & line);
 		Joint* parseJointWRL (std::ifstream & ifs_joints, const std::string & line, Body* innerBody);
-		void parseWRLJointLimit (std::ifstream & ifs_jointLimits);
 
 		int nbBodies(void) const;
 		int nbJoints(void) const;

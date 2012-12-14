@@ -1,5 +1,5 @@
 #include "robotParser.h"
-#include "../data/romeo/footDimensions.h"
+#include "footDimensions.h"
 #include "tools.h"
 
 #include "writeAmelif.h"
@@ -30,6 +30,7 @@ int createRobot(const std::string & fileName, const std::string & robotName, boo
 
 	DECLARE_IFSTREAM(file_wrl,         ("../data/"+robotName+"/VRMLmain.wrl").c_str());
 	DECLARE_IFSTREAM(file_jointLimits, ("../data/"+robotName+"/jointLimits.dat").c_str());
+	DECLARE_IFSTREAM(file_torqueLimits, ("../data/"+robotName+"/torqueLimits.dat").c_str());
 	DECLARE_IFSTREAM(file_TagToBody,    ("../data/"+robotName+"/tag_to_bodyname.txt").c_str());
 
 	// if the wrml file is not found, stop right there.
@@ -39,10 +40,71 @@ int createRobot(const std::string & fileName, const std::string & robotName, boo
 	//parsing
 	MultiBody * mb = new MultiBody(robotName);
 	mb->isRomeo_ = (robotName.size() > 5 && robotName.substr(0,5) == "romeo");
-	mb->parseWRL(file_wrl, file_jointLimits);
+	mb->parseWRL(file_wrl);
+	if(file_jointLimits)
+		mb->parseJointLimits(file_jointLimits);
+	if(file_torqueLimits)
+		mb->parseTorqueLimits(file_torqueLimits);
+	if(file_TagToBody)
+		mb->parseTags(file_TagToBody);
 
-	if (mb->isRomeo_)
-		loadRomeoFeetData(mb);
+	loadFeetData(fileName, mb);
+
+	// Finalize the parsing
+	//update the outer - inner body
+	int numJoints = mb->nbJoints();
+	for (int i=0; i<numJoints; ++i)
+	{
+		bool valid = true;
+		std::map<int,Joint*>::iterator it = mb->jointMap_.find(i);
+		Joint* j = it->second;
+		assert(j!=0x0  && "Null joint");
+
+		// update the inner, outer body info with the ids
+		std::map<std::string,int>::iterator itb = Body::bodyNameToId_.find(j->innerBodyName_);
+		if ( itb != Body::bodyNameToId_.end() )
+			j->innerBodyId_=itb->second;
+		else
+		{
+			j->innerBodyId_= -1;
+			std::cerr << "Unable to find inner body " << j->innerBodyName_ << " for the joint " << j->name_ << std::endl;
+		}
+
+		std::map<std::string,int>::iterator it2 = Body::bodyNameToId_.find(j->outerBodyName_);
+		if ( it2 != Body::bodyNameToId_.end() )
+			j->outerBodyId_=it2->second;
+		else
+		{
+			j->outerBodyId_= -1;
+			std::cerr << "Unable to find outer body " << j->outerBodyName_ << " for the joint " << j->name_ << std::endl;
+		}
+
+
+
+
+		// check existence of inner Body
+		if (mb->bodyMap_.find(j->innerBodyId_) != mb->bodyMap_.end() )
+		{
+			j->innerBody_ = mb->bodyMap_[j->innerBodyId_];
+			mb->bodyMap_[j->innerBodyId_]->outerJointList_.push_back(j);
+		}
+		else
+			valid = false;
+
+		// check existence of outer Body
+		if (mb->bodyMap_.find(j->outerBodyId_) != mb->bodyMap_.end() )
+			j->outerBody_ = mb->bodyMap_[j->outerBodyId_];
+		else
+			valid = false;
+
+		// if the joint is not valid, remove it
+		if ( valid == false )
+		{
+			std::cerr << "/!\\ The joint " << j->name_ << " cannot be considered as valid  "
+					<< "(in: " << j->innerBodyId_ << ",out: " << j->outerBodyId_ <<	")" << std::endl;
+			mb->jointMap_.erase(i);
+		}
+	}
 
 	// What do we do with the fingers?
 	std::map<int,Joint*>::iterator it;
